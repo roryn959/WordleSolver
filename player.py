@@ -1,9 +1,8 @@
 import string
-import time
 
-CORRECT = C = 0
-SOMEWHERE = S = 1
-INCORRECT = I = 2
+CORRECT = 2
+SOMEWHERE = 1
+INCORRECT = 0
 
 ALPHABET = list(string.ascii_lowercase)
 
@@ -74,7 +73,6 @@ class Player:
 
     def giveFeedback(self, feedback):
         #Feedback is in 5-long list of CORRECT, SOMEWHERE, INCORRECT
-
         impossibles = []
 
         for position, outcome in enumerate(feedback):
@@ -125,19 +123,35 @@ def getFeedback(answer, guess):
             feedback.append(INCORRECT)
     return feedback
 
-ANSWER = 'prick'
-player = Player()
-run = True
-while run:
-    guess = player.getGuess()
+def testPlayer(answer):
+    player = Player()
+    run = True
+    while run:
+        guess = player.getGuess()
 
-    if guess == ANSWER:
-        print(f'Answer guessed correctly: {guess}')
-        run = False
-        break
+        if guess == answer:
+            print(f'Answer guessed correctly: {guess}')
+            run = False
+            break
 
-    print(f'Guess: {guess}')
+        print(f'Guess: {guess}')
 
-    feedback = getFeedback(ANSWER, guess)
+        feedback = getFeedback(answer, guess)
 
-    player.giveFeedback(feedback)
+        player.giveFeedback(feedback)
+
+def usePlayer():
+    player = Player()
+    feedback = None
+    while feedback != '22222':
+        guess = player.getGuess()
+        print(f'Guess: {guess}')
+        feedback = input('Outcome: ')
+
+        list_feedback = []
+        list_feedback[:0] = feedback
+        list_feedback = [int(i) for i in list_feedback]
+
+        player.giveFeedback( list_feedback )
+
+usePlayer()
