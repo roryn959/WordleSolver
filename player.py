@@ -140,18 +140,4 @@ def testPlayer(answer):
 
         player.giveFeedback(feedback)
 
-def usePlayer():
-    player = Player()
-    feedback = None
-    while feedback != '22222':
-        guess = player.getGuess()
-        print(f'Guess: {guess}')
-        feedback = input('Outcome: ')
-
-        list_feedback = []
-        list_feedback[:0] = feedback
-        list_feedback = [int(i) for i in list_feedback]
-
-        player.giveFeedback( list_feedback )
-
-usePlayer()
+testPlayer('plead')
