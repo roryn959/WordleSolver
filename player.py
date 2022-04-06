@@ -17,9 +17,6 @@ def loadWordList():
 
     return words
 
-def loadBetaWordList():
-    return ['strin', 'drink', 'shard', 'tongu', 'omanw', 'menue', 'plays', 'kepty', 'draws', 'cared', 'hares', 'mares']
-
 class Player:
     def __init__(self):
         #Main wordlist
@@ -30,6 +27,8 @@ class Player:
 
         #Dictionary to store values of each char in each position
         self.__charScores = [ {key : 0 for key in ALPHABET} for i in range(5)]
+
+        self.__firstGuess = True
 
     def getPossibleWords(self):
         return self.__possibleWords
@@ -54,6 +53,11 @@ class Player:
                 self.__charScores[n][c] += 10
 
     def getGuess(self):
+        if self.__firstGuess:
+            self.__currentGuess = 'crude'
+            self.__firstGuess = False
+            return self.__currentGuess
+
         self.__calculateCharScores()
 
         bestWord = None
@@ -72,6 +76,9 @@ class Player:
         return self.__currentGuess
 
     def giveFeedback(self, feedback):
+        print(f'\nbefore feedback: {len(self.__possibleWords)} possible words')
+        print('taking feedback. most recent guess:', self.__currentGuess)
+        print(f'feedback: {feedback}')
         #Feedback is in 5-long list of CORRECT, SOMEWHERE, INCORRECT
         impossibles = []
 
@@ -80,21 +87,17 @@ class Player:
             if outcome == CORRECT:
                 for word in self.__possibleWords:
                     if word[position] != c:
-                        #print(f'Removing {word} because CORRECT, {position, outcome, c}')
                         impossibles.append(word)
             elif outcome == SOMEWHERE:
                 for word in self.__possibleWords:
                     if c in word:
                         if word[position] == c:
-                            #print(f'Removing {word} because a SOME, {position, outcome, c}')
                             impossibles.append(word)
                     else:
-                        #print(f'Removing {word} because b SOME, {position, outcome, c}')
                         impossibles.append(word)
             elif outcome == INCORRECT:
                 for word in self.__possibleWords:
                     if c in word:
-                        #print(f'Removing {word} because INCORRECT, {position, outcome, c}')
                         impossibles.append(word)
             else:
                 raise ValueError(f'Unrecognised outcome {outcome}')
@@ -105,6 +108,7 @@ class Player:
                 newPossibleWords.append(word)
             
         self.__possibleWords = newPossibleWords
+        print(f'after feedback: {len(self.__possibleWords)} possible words\n')
 
     def displayInfo(self):
         print(f'Most recent guess: {self.__currentGuess}')
@@ -140,4 +144,5 @@ def testPlayer(answer):
 
         player.giveFeedback(feedback)
 
-testPlayer('plead')
+if __name__ == "__main__":
+    testPlayer('other')
